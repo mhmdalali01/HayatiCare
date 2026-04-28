@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Flagged Results — HMSS</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="layout">
+  <header class="top-bar">
+    <span class="logo">🏥 HMSS</span>
+    <span class="spacer"></span>
+    <span class="user-info" id="user-name"></span>
+    <button class="btn-logout" id="btn-logout" onclick="logout()">Sign Out</button>
+  </header>
+  <nav class="sidebar">
+    <span class="nav-section-title">Doctor Menu</span>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="appointments.html">📅 Appointments</a>
+    <a href="patient_records.html">👤 Patient Records</a>
+    <a href="upload_results.html">📄 Upload Results</a>
+    <a href="flagged_results.html">⚠️ Flagged Results</a>
+  </nav>
+  <main class="content">
+    <div class="page-header"><h1>Flagged Results</h1></div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="/js/api.js"></script>
+<script src="/js/doctor.js"></script>
+<script>document.addEventListener("DOMContentLoaded",function(){var u=getCurrentUser();if(!u||u.role!=="doctor"){clearSession();window.location.href="/index.html";return}document.getElementById("user-name").textContent="Dr. "+u.first_name+" "+u.last_name});</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "com.hmss.app-debug-31:/drawable_input_background.xml.flat",
+        "source": "com.hmss.app-main-33:/drawable/input_background.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_patient_dashboard.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_patient_dashboard.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_chatbot.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_chatbot.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_sign_up.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_sign_up.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.hmss.app-main-33:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_appointments.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_appointments.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_login.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.hmss.app-main-33:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_home_test_submit.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_home_test_submit.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/layout_activity_test_results.xml.flat",
+        "source": "com.hmss.app-main-33:/layout/activity_test_results.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.hmss.app-main-33:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.hmss.app-debug-31:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.hmss.app-main-33:/mipmap-anydpi-v26/ic_launcher.xml"
+    }
+]

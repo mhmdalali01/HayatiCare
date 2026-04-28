@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.hmss'
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    defaultConfig {
+        applicationId "com.hmss"
+        minSdk 21
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        // Default BASE_URL for the Android emulator (localhost via 10.0.2.2).
+        // Physical device on local network: change to your machine's LAN IP, e.g. http://192.168.x.x:5000/
+        buildConfigField "String", "BASE_URL", '"http://192.168.10.83:5000/"'
+    }
+
+    buildTypes {
+        debug {
+            // LAN IP for physical device testing — update if your machine IP changes.
+            buildConfigField "String", "BASE_URL", '"http://192.168.10.83:5000/"'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Replace with your production HTTPS URL before releasing.
+            buildConfigField "String", "BASE_URL", '"https://your-production-server.com/"'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}

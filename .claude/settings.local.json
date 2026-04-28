@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(venv/Scripts/python -c \":*)",
+      "Bash(curl -s -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"secretary@hmss.com\"\",\"\"password\"\":\"\"password123\"\"}')"
+    ]
+  }
+}

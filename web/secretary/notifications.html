@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notifications — HMSS</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="layout">
+  <header class="top-bar">
+    <span class="logo">🏥 HMSS</span>
+    <span class="spacer"></span>
+    <span class="user-info" id="user-name"></span>
+    <button class="btn-logout" id="btn-logout" onclick="logout()">Sign Out</button>
+  </header>
+  <nav class="sidebar">
+    <span class="nav-section-title">Secretary Menu</span>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="manage_patients.html">👥 Manage Patients</a>
+    <a href="manage_doctors.html">👨‍⚕️ Manage Doctors</a>
+    <a href="appointments.html">📅 Appointments</a>
+    <a href="notifications.html">🔔 Notifications</a>
+  </nav>
+  <main class="content">
+    <div class="page-header"><h1>Notifications</h1></div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="/js/api.js"></script>
+<script src="/js/secretary.js"></script>
+<script>document.addEventListener("DOMContentLoaded",function(){var u=getCurrentUser();if(!u||u.role!=="secretary"){clearSession();window.location.href="/index.html";return}document.getElementById("user-name").textContent=u.first_name+" "+u.last_name});</script>
+</body>
+</html>

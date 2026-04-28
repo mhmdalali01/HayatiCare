@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard — HMSS</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="layout">
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <span class="logo">🏥 HMSS</span>
+    <span class="spacer"></span>
+    <span class="user-info" id="user-name"></span>
+    <button class="btn-logout" id="btn-logout" onclick="logout()">Sign Out</button>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <span class="nav-section-title">Doctor Menu</span>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="appointments.html">📅 Appointments</a>
+    <a href="patient_records.html">👤 Patient Records</a>
+    <a href="upload_results.html">📄 Upload Results</a>
+    <a href="flagged_results.html">⚠️ Flagged Results</a>
+  </nav>
+
+  <!-- Main -->
+  <main class="content">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-stat" id="stat-today-appts">—</div>
+        <div class="card-label">Today's Appointments</div>
+      </div>
+      <div class="card">
+        <div class="card-stat" id="stat-flagged" style="color:var(--danger)">—</div>
+        <div class="card-label">Flagged Results</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Patient</th><th>Start</th><th>End</th><th>Reason</th><th>Status</th></tr>
+        </thead>
+        <tbody id="dashboard-appts-tbody">
+          <tr><td colspan="5" class="text-muted" style="padding:24px;text-align:center;">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</div>
+<div id="toast-container"></div>
+<script src="/js/api.js"></script>
+<script src="/js/doctor.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var user = getCurrentUser();
+  if (!user || user.role !== "doctor") {
+    clearSession();
+    window.location.href = "/index.html";
+    return;
+  }
+  document.getElementById("user-name").textContent = "Dr. " + user.first_name + " " + user.last_name;
+  loadDashboard();
+});
+</script>
+</body>
+</html>

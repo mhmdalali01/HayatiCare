@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patient Records — HMSS</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="layout">
+  <header class="top-bar">
+    <span class="logo">🏥 HMSS</span>
+    <span class="spacer"></span>
+    <span class="user-info" id="user-name"></span>
+    <button class="btn-logout" id="btn-logout" onclick="logout()">Sign Out</button>
+  </header>
+  <nav class="sidebar">
+    <span class="nav-section-title">Doctor Menu</span>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="appointments.html">📅 Appointments</a>
+    <a href="patient_records.html">👤 Patient Records</a>
+    <a href="upload_results.html">📄 Upload Results</a>
+    <a href="flagged_results.html">⚠️ Flagged Results</a>
+  </nav>
+  <main class="content">
+    <div class="page-header">
+      <h1>Patient Records</h1>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Patient Code</th><th>Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Gender</th><th>Blood Type</th></tr>
+        </thead>
+        <tbody id="patients-tbody">
+          <tr><td colspan="7">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="/js/api.js"></script>
+<script src="/js/doctor.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var u = getCurrentUser();
+  if (!u || u.role !== "doctor") {
+    clearSession();
+    window.location.href = "/index.html";
+    return;
+  }
+  document.getElementById("user-name").textContent = "Dr. " + u.first_name + " " + u.last_name;
+  loadPatientRecords();
+});
+
+function loadPatientRecords() {
+  var tbody = document.getElementById("patients-tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "<tr><td colspan='7'>Loading...</td></tr>";
+  
+  api.get("/api/patients/my-patients").then(function(data) {
+    if (!data.success) {
+      tbody.innerHTML = "<tr><td colspan='7'>Error: " + data.message + "</td></tr>";
+      return;
+    }
+    tbody.innerHTML = "";
+    var list = data.data || [];
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-muted">No patients with appointments</td></tr>';
+      return;
+    }
+    list.forEach(function(p) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = 
+        "<td>" + (p.patient_code || "—") + "</td>" +
+        "<td>" + (p.first_name || "") + " " + (p.last_name || "") + "</td>" +
+        "<td>" + (p.email || "—") + "</td>" +
+        "<td>" + (p.phone || "—") + "</td>" +
+        "<td>" + (p.date_of_birth || "—") + "</td>" +
+        "<td>" + (p.gender || "—") + "</td>" +
+        "<td>" + (p.blood_type || "—") + "</td>";
+      tbody.appendChild(tr);
+    });
+  });
+}
+</script>
+</body>
+</html>
