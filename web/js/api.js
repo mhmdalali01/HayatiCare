@@ -2,7 +2,7 @@
  * api.js — Fetch wrapper with automatic JWT header injection.
  */
 
-var BASE_URL = "http://localhost:5000";
+var BASE_URL = "";
 
 async function apiFetch(endpoint, options) {
   options = options || {};

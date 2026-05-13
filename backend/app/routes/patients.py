@@ -20,6 +20,7 @@ from ..utils.responses import (
 )
 from ..utils.validators import validate_required_fields, validate_email
 from ..models.audit_log import AuditLog
+from ..services.notification_service import send_notification
 
 patients_bp = Blueprint("patients", __name__, url_prefix="/api/patients")
 
@@ -134,6 +135,12 @@ def create_patient():
     db.session.commit()
 
     _log_action(actor_id, "create_patient", patient.patient_id, f"Created patient {user.email}")
+    send_notification(
+        user_id=actor_id,
+        title="Patient Created",
+        message=f"You created a new patient: {user.first_name} {user.last_name} ({user.email}).",
+        notif_type="info",
+    )
     return created_response(data=patient.to_dict(), message="Patient created")
 
 
@@ -218,6 +225,12 @@ def delete_patient(patient_id):
     db.session.commit()
 
     _log_action(actor_id, "delete_patient", patient_id)
+    send_notification(
+        user_id=actor_id,
+        title="Patient Deleted",
+        message=f"You deleted patient: {user.first_name} {user.last_name} ({user.email}).",
+        notif_type="info",
+    )
     return success_response(message="Patient deleted")
 
 

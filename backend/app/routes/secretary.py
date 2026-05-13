@@ -5,11 +5,15 @@ Secretaries can create / view their own profile.
 Admin creation of secretary accounts is also handled here.
 """
 
+from datetime import date
+
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt
 from ..extensions import db
 from ..models.secretary import Secretary
 from ..models.user import User
+from ..models.appointment import Appointment
+from ..models.doctor import Doctor
 from ..services.auth_service import hash_password
 from ..utils.decorators import role_required, any_authenticated
 from ..utils.responses import (
@@ -84,3 +88,75 @@ def get_secretary(secretary_id):
     if not sec:
         return not_found_response("Secretary not found")
     return success_response(data=sec.to_dict())
+
+
+@secretary_bp.route("/dashboard-summary", methods=["GET"])
+@role_required("secretary")
+def dashboard_summary():
+    """Return today's schedule + doctor workload for the secretary dashboard."""
+    today = date.today()
+
+    total_patients = User.query.filter(User.role == "patient").count()
+    total_doctors  = User.query.filter(User.role == "doctor").count()
+
+    today_appts = Appointment.query.filter(
+        db.func.date(Appointment.scheduled_start) == today
+    ).order_by(Appointment.scheduled_start.asc()).all()
+
+    today_schedule = []
+    for a in today_appts:
+        patient_name = (
+            f"{a.patient.user.first_name} {a.patient.user.last_name}"
+            if a.patient and a.patient.user else "Unknown"
+        )
+        doctor_name = (
+            f"Dr. {a.doctor.user.first_name} {a.doctor.user.last_name}"
+            if a.doctor and a.doctor.user else "Unknown"
+        )
+        today_schedule.append({
+            "appointment_id": a.appointment_id,
+            "time":           a.scheduled_start.strftime("%H:%M") if a.scheduled_start else "",
+            "patient_name":   patient_name,
+            "doctor_name":    doctor_name,
+            "reason":         a.reason or "—",
+            "status":         a.status,
+        })
+
+    today_appointments_count = len(today_appts)
+
+    doctors = Doctor.query.all()
+    doctor_workload = []
+    for d in doctors:
+        count = Appointment.query.filter(
+            Appointment.doctor_id == d.doctor_id,
+            db.func.date(Appointment.scheduled_start) == today,
+        ).count()
+
+        if count == 0:
+            label = "Free"
+        elif count <= 4:
+            label = "Available"
+        elif count <= 7:
+            label = "Moderate"
+        else:
+            label = "Busy"
+
+        doctor_name = (
+            f"Dr. {d.user.first_name} {d.user.last_name}" if d.user else "Unknown"
+        )
+
+        doctor_workload.append({
+            "doctor_id":         d.doctor_id,
+            "name":              doctor_name,
+            "specialization":    d.specialization or "—",
+            "appointments_today": count,
+            "status_label":      label,
+        })
+
+    return success_response(data={
+        "total_patients":         total_patients,
+        "total_doctors":          total_doctors,
+        "today_appointments_count": today_appointments_count,
+        "today_schedule":          today_schedule,
+        "doctor_workload":         doctor_workload,
+    })

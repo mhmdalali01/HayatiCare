@@ -2,6 +2,29 @@
  * secretary.js — Secretary dashboard
  */
 
+function initSidebar(user) {
+  var nameEl = document.getElementById("sidebar-user-name");
+  if (nameEl && user) {
+    nameEl.textContent = user.first_name + " " + user.last_name;
+  }
+}
+
+var _apptRefreshInterval = null;
+
+function startAutoRefresh() {
+  if (_apptRefreshInterval) clearInterval(_apptRefreshInterval);
+  _apptRefreshInterval = setInterval(function() {
+    loadAppointments(true);
+  }, 5000);
+}
+
+function stopAutoRefresh() {
+  if (_apptRefreshInterval) {
+    clearInterval(_apptRefreshInterval);
+    _apptRefreshInterval = null;
+  }
+}
+
 function showToast(message, type) {
   var container = document.getElementById("toast-container");
   if (!container) {
@@ -188,14 +211,19 @@ function submitCreateDoctor() {
 }
 
 // ===== Appointments =====
-function loadAppointments() {
+function loadAppointments(isAutoRefresh) {
   var tbody = document.getElementById("appt-tbody");
   if (!tbody) return;
-  tbody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
-  
+
+  if (!isAutoRefresh) {
+    tbody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
+  }
+
   api.get("/api/appointments").then(function(data) {
     if (!data.success) {
-      tbody.innerHTML = "<tr><td colspan='8'>Error: " + data.message + "</td></tr>";
+      if (!isAutoRefresh) {
+        tbody.innerHTML = "<tr><td colspan='8'>Error: " + data.message + "</td></tr>";
+      }
       return;
     }
     tbody.innerHTML = "";
@@ -232,6 +260,7 @@ function deleteApp(id) {
 }
 
 function openEditAppt(id) {
+  stopAutoRefresh();
   var apptId = id || parseInt(document.getElementById("edit-appt-id").value);
   
   api.get("/api/appointments/" + apptId).then(function(data) {
@@ -285,6 +314,7 @@ function closeEditAppt() {
   document.getElementById("edit-appt-location").value = "";
   document.getElementById("edit-appt-status").value = "pending";
   document.getElementById("edit-appt-comment").value = "";
+  startAutoRefresh();
 }
 
 function submitEditAppt() {
@@ -323,6 +353,7 @@ function submitEditAppt() {
 }
 
 function openCreateAppt() {
+  stopAutoRefresh();
   var pSel = document.getElementById("appt-patient-id");
   var dSel = document.getElementById("appt-doctor-id");
   pSel.innerHTML = "<option value=''>Select Patient</option>";
@@ -365,6 +396,7 @@ function closeCreateAppt() {
   document.getElementById("appt-end").value = "";
   document.getElementById("appt-reason").value = "";
   document.getElementById("appt-location").value = "";
+  startAutoRefresh();
 }
 
 function onDoctorChange(el) {
@@ -409,3 +441,166 @@ function submitCreateAppt() {
     if (data.success) { closeCreateAppt(); loadAppointments(); }
   });
 }
+
+// ===== Notifications =====
+function loadNotifications() {
+  var tbody = document.getElementById("notif-tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+
+  api.get("/api/notifications").then(function(data) {
+    if (!data.success) {
+      tbody.innerHTML = "<tr><td colspan='5'>Error: " + data.message + "</td></tr>";
+      return;
+    }
+    tbody.innerHTML = "";
+    var list = data.data || [];
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5">No notifications</td></tr>';
+      return;
+    }
+    list.forEach(function(n) {
+      var tr = document.createElement("tr");
+      tr.className = n.is_read ? "" : "unread";
+      tr.innerHTML =
+        "<td><span class='badge badge-" + (n.type || "info") + "'>" + (n.type || "info") + "</span></td>" +
+        "<td>" + (n.title || "—") + "</td>" +
+        "<td>" + (n.message || "—") + "</td>" +
+        "<td>" + new Date(n.created_at).toLocaleString() + "</td>" +
+        "<td>" +
+          (n.is_read
+            ? "<span class='badge badge-secondary'>Read</span>"
+            : "<button class='btn btn-sm btn-outline' onclick='markNotifRead(" + n.notification_id + ")'>Mark Read</button>"
+          ) +
+        "</td>";
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function markNotifRead(id) {
+  api.put("/api/notifications/" + id + "/read").then(function(data) {
+    if (data.success) loadNotifications();
+  });
+}
+
+// ===== SPA Navigation =====
+(function() {
+  var spaState = { currentPage: "", isLoading: false };
+
+  function initSPA() {
+    document.querySelectorAll(".sidebar-nav a").forEach(function(link) {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        var href = link.getAttribute("href");
+        if (href && href !== spaState.currentPage) {
+          navigateTo(href);
+        }
+      });
+    });
+
+    window.addEventListener("popstate", function(e) {
+      if (e.state && e.state.page) {
+        loadContent(e.state.page, true);
+      }
+    });
+
+    var initial = window.location.pathname.split("/").pop() || "dashboard.html";
+    spaState.currentPage = initial;
+  }
+
+  window.navigateTo = navigateTo;
+
+  function navigateTo(url) {
+    history.pushState({ page: url }, "", url);
+    loadContent(url, false);
+  }
+
+  function loadContent(url, isPopState) {
+    if (spaState.isLoading) return;
+    spaState.isLoading = true;
+
+    var mainEl = document.getElementById("main-content");
+    if (!mainEl) { spaState.isLoading = false; return; }
+
+    mainEl.classList.add("content-loading");
+    mainEl.innerHTML = buildSkeleton();
+
+    fetch(url)
+      .then(function(r) {
+        if (!r.ok) throw new Error("Page not found (" + r.status + ")");
+        return r.text();
+      })
+      .then(function(html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var newMain = doc.getElementById("main-content");
+        if (!newMain) throw new Error("Main content not found");
+
+        var title = doc.querySelector("title");
+        if (title) document.title = title.textContent;
+
+        mainEl.classList.remove("content-loading");
+        mainEl.classList.add("content-exit");
+        setTimeout(function() {
+          mainEl.innerHTML = newMain.innerHTML;
+          mainEl.classList.remove("content-exit");
+          mainEl.classList.add("content-enter");
+
+          runPageScripts(mainEl);
+
+          updateActiveSidebar(url);
+          spaState.currentPage = url;
+
+          setTimeout(function() {
+            mainEl.classList.remove("content-enter");
+          }, 350);
+          spaState.isLoading = false;
+        }, 120);
+      })
+      .catch(function(err) {
+        mainEl.classList.remove("content-loading");
+        mainEl.innerHTML =
+          '<div style="text-align:center;padding:60px 20px">' +
+            '<h2 style="color:#ea4335;margin-bottom:8px">Failed to load page</h2>' +
+            '<p style="color:#6c757d">' + err.message + '</p>' +
+            '<button class="btn btn-primary mt-2" onclick="location.reload()">Reload</button>' +
+          '</div>';
+        spaState.isLoading = false;
+      });
+  }
+
+  function runPageScripts(container) {
+    container.querySelectorAll("script").forEach(function(oldScr) {
+      var scr = document.createElement("script");
+      Array.from(oldScr.attributes).forEach(function(a) {
+        scr.setAttribute(a.name, a.value);
+      });
+      scr.textContent = oldScr.textContent;
+      oldScr.parentNode.replaceChild(scr, oldScr);
+    });
+  }
+
+  function updateActiveSidebar(url) {
+    var page = url.replace(".html", "");
+    document.querySelectorAll(".sidebar-nav a").forEach(function(link) {
+      var dp = link.getAttribute("data-page");
+      link.classList.toggle("active", dp === page);
+    });
+  }
+
+  function buildSkeleton() {
+    return (
+      '<div class="skel-wrap">' +
+        '<div class="skel-line" style="width:36%;height:26px;margin-bottom:28px"></div>' +
+        '<div class="skel-card" style="height:80px;margin-bottom:16px"></div>' +
+        '<div class="skel-card" style="height:200px"></div>' +
+      '</div>'
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSPA);
+  } else {
+    initSPA();
+  }
+})();

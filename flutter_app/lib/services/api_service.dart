@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../core/constants.dart';
 import '../models/user_model.dart';
+import '../models/doctor_model.dart';
 import '../models/appointment_model.dart';
 import '../models/test_result_model.dart';
 import '../models/notification_model.dart';
@@ -118,6 +119,14 @@ class ApiService {
   Future<Map<String, dynamic>> getAvailableDoctors() async {
     final resp = await _dio.get('/api/doctors/available');
     return _handle(resp);
+  }
+
+  Future<List<DoctorModel>> getAllDoctors() async {
+    final resp = await _dio.get('/api/doctors');
+    final data = _handle(resp);
+    return (data['data'] as List)
+        .map((e) => DoctorModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<Map<String, dynamic>> getMyProfile() async {

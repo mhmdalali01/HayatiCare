@@ -7,27 +7,53 @@
 </head>
 <body>
 <div class="layout">
-  <header class="top-bar">
-    <span class="logo">🏥 HMSS</span>
-    <span class="spacer"></span>
-    <span class="user-info" id="user-name"></span>
-    <button class="btn-logout" id="btn-logout" onclick="logout()">Sign Out</button>
-  </header>
-  <nav class="sidebar">
-    <span class="nav-section-title">Secretary Menu</span>
-    <a href="dashboard.html">📊 Dashboard</a>
-    <a href="manage_patients.html">👥 Manage Patients</a>
-    <a href="manage_doctors.html">👨‍⚕️ Manage Doctors</a>
-    <a href="appointments.html">📅 Appointments</a>
-    <a href="notifications.html">🔔 Notifications</a>
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🏥 HMSS</div>
+      <div class="sidebar-user-name" id="sidebar-user-name"></div>
+      <div class="sidebar-role">Admin Secretary</div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="dashboard.html" data-page="dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="manage_patients.html" data-page="manage_patients"><span class="nav-icon">👥</span> Manage Patients</a>
+      <a href="manage_doctors.html" data-page="manage_doctors"><span class="nav-icon">👨‍⚕️</span> Manage Doctors</a>
+      <a href="appointments.html" data-page="appointments"><span class="nav-icon">📅</span> Appointments</a>
+      <a href="notifications.html" data-page="notifications"><span class="nav-icon">🔔</span> Notifications</a>
+    </div>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" onclick="logout()">🚪 Sign Out</button>
+    </div>
   </nav>
-  <main class="content">
+  <main class="content" id="main-content">
     <div class="page-header"><h1>Notifications</h1></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Title</th><th>Message</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="notif-tbody">
+          <tr><td colspan="5" class="text-muted" style="padding:24px;text-align:center;">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+function pageInit() {
+  loadNotifications();
+}
+
+(function() {
+  var user = getCurrentUser();
+  if (!user || user.role !== "secretary") {
+    clearSession();
+    window.location.href = "/index.html";
+    return;
+  }
+  initSidebar(user);
+  pageInit();
+})();
+    </script>
   </main>
 </div>
 <div id="toast-container"></div>
 <script src="/js/api.js"></script>
 <script src="/js/secretary.js"></script>
-<script>document.addEventListener("DOMContentLoaded",function(){var u=getCurrentUser();if(!u||u.role!=="secretary"){clearSession();window.location.href="/index.html";return}document.getElementById("user-name").textContent=u.first_name+" "+u.last_name});</script>
 </body>
 </html>

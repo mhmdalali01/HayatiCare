@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function logout() {
   var token = localStorage.getItem("access_token");
   if (token) {
-    fetch("http://localhost:5000/api/auth/logout", {
+    fetch("/api/auth/logout", {
       method: "POST",
       headers: { 
         "Authorization": "Bearer " + token, 

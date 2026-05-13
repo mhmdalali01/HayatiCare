@@ -24,6 +24,7 @@ from ..utils.responses import (
 )
 from ..utils.validators import validate_required_fields
 from ..models.audit_log import AuditLog
+from ..services.notification_service import send_notification
 
 appointments_bp = Blueprint("appointments", __name__, url_prefix="/api/appointments")
 
@@ -129,6 +130,21 @@ def create_appointment():
         return error_response(str(e))
 
     _log(user_id, "create_appointment", appt.appointment_id)
+    if role == "secretary":
+        patient_name = (
+            f"{appt.patient.user.first_name} {appt.patient.user.last_name}"
+            if appt.patient and appt.patient.user else "Unknown"
+        )
+        doctor_name = (
+            f"Dr. {appt.doctor.user.first_name} {appt.doctor.user.last_name}"
+            if appt.doctor and appt.doctor.user else "Unknown"
+        )
+        send_notification(
+            user_id=user_id,
+            title="Appointment Created",
+            message=f"You created an appointment for {patient_name} with {doctor_name}.",
+            notif_type="appointment",
+        )
     return created_response(data=appt.to_dict(), message="Appointment created")
 
 
@@ -205,6 +221,18 @@ def update_appointment(appointment_id):
         db.session.commit()
 
     _log(user_id, "update_appointment", appointment_id)
+    if new_status:
+        role = claims.get("role")
+        patient_name = (
+            f"{appt.patient.user.first_name} {appt.patient.user.last_name}"
+            if appt.patient and appt.patient.user else "Unknown"
+        )
+        send_notification(
+            user_id=user_id,
+            title=f"Appointment {new_status.capitalize()}",
+            message=f"You {new_status} the appointment for {patient_name}.",
+            notif_type="appointment",
+        )
     return success_response(data=appt.to_dict(), message="Appointment updated")
 
 
@@ -240,27 +268,30 @@ def delete_appointment(appointment_id):
     db.session.commit()
     current_app.logger.info(f"Successfully deleted appointment {appointment_id}")
 
-    # Create notification
+    # Notify patient about cancellation
     try:
-        from app.models.notification import Notification
         from app.models.patient import Patient
-        # Get patient's user_id
         patient = Patient.query.get(patient_id)
         patient_user_id = patient.user_id if patient else None
         if patient_user_id:
-            notif = Notification(
+            send_notification(
                 user_id=patient_user_id,
                 title="Appointment Cancelled",
                 message=f"Your appointment with Dr. {doctor_name} on {scheduled_time} has been cancelled.",
-                type="appointment"
+                notif_type="appointment",
             )
-            db.session.add(notif)
-            db.session.commit()
-            current_app.logger.info(f"Created cancellation notification for patient {patient_id}, user {patient_user_id}")
         else:
             current_app.logger.warning(f"Could not find patient {patient_id} user_id")
     except Exception as e:
         current_app.logger.error(f"Failed to create notification: {e}")
+
+    # Notify secretary who performed the deletion
+    send_notification(
+        user_id=user_id,
+        title="Appointment Deleted",
+        message=f"You deleted the appointment with Dr. {doctor_name} on {scheduled_time}.",
+        notif_type="appointment",
+    )
 
     _log(user_id, "delete_appointment", appointment_id)
     return success_response(message="Appointment deleted")

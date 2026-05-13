@@ -75,7 +75,8 @@ def create_app(env: str = "development") -> Flask:
 
     # Serve static web files AFTER API blueprints
     # Absolute path to web folder
-    web_dir = "C:/Coding Projects/hmss/web"
+    web_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "web")
+    web_dir = os.path.normpath(web_dir)
     if os.path.exists(web_dir):
         @app.route("/")
         def index():

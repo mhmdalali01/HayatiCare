@@ -8,7 +8,7 @@ import '../providers/test_results_provider.dart';
 import '../providers/notifications_provider.dart';
 import '../core/constants/app_colors.dart';
 import '../core/constants/app_text_styles.dart';
-import '../core/constants/doctor_avatars.dart';
+import '../providers/doctors_provider.dart';
 import 'home_test_screen.dart';
 import 'appointments_screen.dart';
 import 'test_results_screen.dart';
@@ -31,13 +31,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     'General',
     'Pediatrics',
   ];
-
-  static const _popularDoctors = [
-    {'name': 'Dr. Sarah Johnson', 'spec': 'Cardiologist', 'rating': '4.9', 'reviews': '128'},
-    {'name': 'Dr. Michael Chen', 'spec': 'Dermatologist', 'rating': '4.8', 'reviews': '97'},
-    {'name': 'Dr. Emily Rodriguez', 'spec': 'General Practice', 'rating': '4.7', 'reviews': '214'},
-    {'name': 'Dr. James Wilson', 'spec': 'Neurologist', 'rating': '4.9', 'reviews': '83'},
-  ];
+  final Set<int> _pinnedDoctorIds = {};
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,6 +41,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     Future.microtask(() {
       ref.read(appointmentsProvider.notifier).load();
       ref.read(testResultsProvider.notifier).load();
+      ref.read(doctorsProvider.notifier).load();
     });
   }
 
@@ -121,6 +116,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final notifs = ref.watch(notificationsProvider);
     final appts = ref.watch(appointmentsProvider);
     final results = ref.watch(testResultsProvider);
+    final doctorsState = ref.watch(doctorsProvider);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -149,7 +145,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 const SizedBox(height: 32),
                 _buildRecentResults(results),
                 const SizedBox(height: 32),
-                _buildPopularDoctors(),
+                _buildPopularDoctors(doctorsState),
                 const SizedBox(height: 24),
               ],
             ),
@@ -209,7 +205,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     child: CircleAvatar(
                       radius: 44,
                       backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.1),
-                      backgroundImage: NetworkImage(DoctorAvatars.getAvatar(0)),
+                      child: Icon(Icons.person, color: AppColors.primaryBlue, size: 44),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -647,7 +643,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildPopularDoctors() {
+  Widget _buildPopularDoctors(DoctorsState doctorsState) {
+    final doctors = doctorsState.doctors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -669,7 +666,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        // Filter chips with improved design
         SizedBox(
           height: 42,
           child: ListView.builder(
@@ -720,88 +716,91 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        // Doctor cards
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _popularDoctors.length,
-          itemBuilder: (context, i) {
-            final doc = _popularDoctors[i];
-            return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.cardWhite,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: AppTheme.cardShadow,
-              ),
-              child: Row(
-                children: [
-                  // Doctor avatar
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.primaryBlue.withValues(alpha: 0.2),
-                        width: 2,
+        if (doctorsState.isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (doctors.isEmpty)
+          _buildEmptyState(Icons.person_off_outlined, 'No doctors available')
+        else
+          () {
+            final filtered = _selectedFilter == 0
+                ? doctors
+                : doctors.where((d) =>
+                    d.specialization.toLowerCase() ==
+                    _filters[_selectedFilter].toLowerCase()
+                  ).toList();
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: filtered.length,
+              itemBuilder: (context, i) {
+                final doc = filtered[i];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.cardWhite,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: AppTheme.cardShadow,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.primaryBlue.withValues(alpha: 0.2),
+                          width: 2,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.1),
+                        child: Icon(Icons.person, color: AppColors.primaryBlue, size: 30),
                       ),
                     ),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: AppColors.backgroundGrey,
-                      backgroundImage: NetworkImage(DoctorAvatars.getAvatar(i)),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            doc.fullName,
+                            style: AppTextStyles.titleMedium,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            doc.specialization.isNotEmpty ? doc.specialization : 'General',
+                            style: AppTextStyles.bodyGrey,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          doc['name']!,
-                          style: AppTextStyles.titleMedium,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          doc['spec']!,
-                          style: AppTextStyles.bodyGrey,
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            const Icon(Icons.star,
-                                color: AppColors.starGold, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              doc['rating']!,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textDark,
-                              ),
-                            ),
-                            Text(
-                              '  |  ${doc['reviews']} reviews',
-                              style: AppTextStyles.caption,
-                            ),
-                          ],
-                        ),
-                      ],
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_pinnedDoctorIds.contains(doc.doctorId)) {
+                            _pinnedDoctorIds.remove(doc.doctorId);
+                          } else {
+                            _pinnedDoctorIds.add(doc.doctorId);
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        _pinnedDoctorIds.contains(doc.doctorId)
+                            ? Icons.push_pin
+                            : Icons.push_pin_outlined,
+                        color: _pinnedDoctorIds.contains(doc.doctorId)
+                            ? AppColors.primaryBlue
+                            : AppColors.textGrey,
+                        size: 22,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.bookmark_border,
-                      color: AppColors.textGrey,
-                      size: 22,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                  ],
+                ),
+              );
+                },
+              );
+            }(),
       ],
     );
   }
@@ -833,7 +832,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: CircleAvatar(
                   radius: 26,
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
-                  backgroundImage: NetworkImage(DoctorAvatars.getAvatar(0)),
+                  child: Icon(Icons.person, color: Colors.white, size: 28),
                 ),
               ),
               const SizedBox(width: 14),
@@ -919,7 +918,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           CircleAvatar(
             radius: 22,
             backgroundColor: AppColors.backgroundGrey,
-            backgroundImage: NetworkImage(DoctorAvatars.getAvatar(0)),
+            child: Icon(Icons.person, color: AppColors.primaryBlue, size: 22),
           ),
           const SizedBox(width: 12),
           Expanded(
