@@ -257,14 +257,6 @@ flutter run
 
 ---
 
-## 📌 Notes
-
-- This project was developed for **academic and learning purposes** as part of a software engineering curriculum.
-- Before deploying to production, update all **secret keys**, **database credentials**, and **CORS origins** in the `.env` file.
-- The mobile app is currently configured for **local development**. For production, update the API base URL and enable HTTPS.
-- The web dashboard uses session-based JWT tokens that expire after **15 minutes** by default (configurable in `.env`).
-
----
 
 <p align="center">
   Made with ❤️ by the HayatiCare Team
