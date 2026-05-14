@@ -15,7 +15,8 @@ class UserModel {
     required this.email,
     this.phone,
     required this.isActive,
-  });
+  })
+  ;
 
   String get fullName => '$firstName $lastName';
 

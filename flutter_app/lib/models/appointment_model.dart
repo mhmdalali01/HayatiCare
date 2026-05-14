@@ -12,6 +12,7 @@ class AppointmentModel {
   final String? location;
   final String? secretaryComment;
 
+
   const AppointmentModel({
     required this.appointmentId,
     required this.patientId,

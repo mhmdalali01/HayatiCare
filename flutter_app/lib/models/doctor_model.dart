@@ -11,7 +11,8 @@ class DoctorModel {
     required this.firstName,
     required this.lastName,
     required this.specialization,
-  });
+  })
+  ;
 
   factory DoctorModel.fromJson(Map<String, dynamic> j) => DoctorModel(
     doctorId: j['doctor_id'] as int,

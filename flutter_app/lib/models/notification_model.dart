@@ -15,7 +15,8 @@ class NotificationModel {
     required this.message,
     required this.isRead,
     this.createdAt,
-  });
+  })
+  ;
 
   factory NotificationModel.fromJson(Map<String, dynamic> j) => NotificationModel(
         notificationId: j['notification_id'] as int,

@@ -47,7 +47,8 @@ class TestResultModel {
     this.normalRange,
   });
 
-  factory TestResultModel.fromJson(Map<String, dynamic> j) => TestResultModel(
+  factory TestResultModel.fromJson(Map<String, dynamic> j) =>
+      TestResultModel(
         resultId: j['result_id'] as int,
         patientId: j['patient_id'] as int,
         doctorId: j['doctor_id'] as int,
@@ -65,4 +66,5 @@ class TestResultModel {
             ? NormalRange.fromJson(j['normal_range'] as Map<String, dynamic>)
             : null,
       );
+
 }

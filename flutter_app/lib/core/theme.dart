@@ -15,6 +15,7 @@ class AppTheme {
   static const Color border = Color(0xFFE4EAF4);
   static const Color divider = Color(0xFFE4EAF4);
 
+
   // Status colors
   static const Color success = Color(0xFF4CAF50);
   static const Color error = Color(0xFFFF5252);

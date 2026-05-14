@@ -21,7 +21,8 @@ class BodyHealthModel {
     this.lastUpdated,
   });
 
-  factory BodyHealthModel.fromJson(Map<String, dynamic> j) => BodyHealthModel(
+  factory BodyHealthModel.fromJson(Map<String, dynamic> j) =>
+      BodyHealthModel(
         bodyHealthId: j['body_health_id'] as int?,
         patientId: j['patient_id'] as int,
         gender: j['gender'] as String?,
@@ -33,7 +34,8 @@ class BodyHealthModel {
         lastUpdated: j['last_updated'] as String?,
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'gender': gender,
         'height_cm': heightCm,
         'weight_kg': weightKg,
@@ -61,4 +63,5 @@ class BodyHealthModel {
     if (weightKg == null) return null;
     return (weightKg! * 30).round();
   }
+
 }
