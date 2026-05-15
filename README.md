@@ -1,38 +1,55 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter"/>
-  <img src="https://img.shields.io/badge/Flask-2.x-000000?logo=flask&logoColor=white" alt="Flask"/>
+  <img src="https://img.shields.io/badge/Flask-3.x-000000?logo=flask&logoColor=white" alt="Flask"/>
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL"/>
+  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter"/>
+  <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white" alt="JWT"/>
   <img src="https://img.shields.io/badge/Status-Active-2ecc71" alt="Status"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License"/>
 </p>
 
-<h1 align="center">🏥 HayatiCare</h1>
-<p align="center"><strong>Modern Clinic & Hospital Management System</strong></p>
-<p align="center">A full-stack healthcare management platform with a web dashboard for staff and a mobile app for patients.</p>
+<h1 align="center">🏥 Hospital Management Software System</h1>
+<p align="center"><strong>A secure, role-based clinic management platform</strong></p>
+<p align="center">
+  Centralized digital solution for managing appointments, medical test results,<br/>
+  and doctor–patient communication — built for real clinical environments.
+</p>
 
 <p align="center">
-  <code>Web Dashboard</code> •
-  <code>Flutter Mobile App</code> •
   <code>Flask REST API</code> •
-  <code>MySQL Database</code>
+  <code>MySQL Database</code> •
+  <code>Vanilla JS Web Dashboard</code> •
+  <code>Flutter Mobile App</code>
 </p>
 
-<br/>
+---
+
+## 👥 Team
+
+| Name | Role |
+|------|------|
+| Mohamad Al Ali | 
+| Mohammad Sinn  | 
+| Ahmad Ghaddar  | 
+| Omar Saadeh    | 
+
+> 📚 Lebanese American University — COE461 Software Engineering (Spring 2026)
 
 ---
 
 ## ✨ Features
 
-| Icon | Feature | Description |
-|------|---------|-------------|
-| 🧑‍🤝‍🧑 | **Patient Management** | Register, view, and manage patient profiles and medical history |
-| 🩺 | **Doctor Management** | Manage doctor profiles, specializations, and schedules |
-| 📅 | **Appointment Booking** | Create, view, update, and cancel appointments with real-time status |
-| 📊 | **Secretary Dashboard** | Central dashboard with today's schedule, workload, and quick actions |
-| 📱 | **Mobile Doctor Browsing** | Browse and filter doctors by specialty directly from the mobile app |
-| 🏷️ | **Category Filtering** | Filter doctors by Cardiology, Dermatology, Neurology, and more |
-| 🔔 | **Notifications** | Real-time notifications for appointment updates and system events |
-| 🎨 | **Clean Modern UI** | Premium gradient sidebar, animated transitions, and responsive design |
+| | Feature | Description |
+|--|---------|-------------|
+| 🔐 | **Role-Based Access Control** | Patients, Doctors, and Secretaries each get a tailored interface with scoped permissions |
+| 📅 | **Appointment Management** | Full workflow: request → confirm / reschedule → notify, managed by doctors and secretaries |
+| 🧪 | **Medical Test Results** | Doctors upload results; the system auto-flags values outside normal ranges |
+| 🚨 | **Abnormal Value Detection** | Out-of-range results are highlighted immediately for both patient and doctor |
+| 🤖 | **Medical Chatbot** | Restricted chatbot that answers questions about the app and reference ranges — no diagnoses |
+| 🔔 | **Notifications** | Automated alerts for appointment updates and test result availability |
+| 🔒 | **Account Lockout** | Accounts lock temporarily after 3 consecutive failed login attempts |
+| 🏠 | **Home Test Submissions** | Patients submit home measurements via the mobile app for doctor review |
+| 👩‍💼 | **Secretary Dashboard** | Full visibility over all appointments, patient accounts, and doctor accounts |
+| 📱 | **Patient Mobile App** | Flutter app: appointments, test results, chatbot, and notifications |
 
 ---
 
@@ -40,135 +57,167 @@
 
 | Layer | Technology | Purpose |
 |-------|------------|---------|
-| **Backend** | ![Flask](https://img.shields.io/badge/-Flask-000000?logo=flask) Python 3.10+ | REST API, authentication, business logic |
-| **Database** | ![MySQL](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql) 8.0+ | Data persistence with SQLAlchemy ORM |
-| **Web Frontend** | ![HTML5](https://img.shields.io/badge/-HTML5-E34F26?logo=html5) ![CSS3](https://img.shields.io/badge/-CSS3-1572B6?logo=css3) ![JS](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript) | Secretary & doctor web dashboard |
-| **Mobile App** | ![Flutter](https://img.shields.io/badge/-Flutter-02569B?logo=flutter) 3.x | Patient-facing Android app |
-| **Auth** | ![JWT](https://img.shields.io/badge/-JWT-000000?logo=jsonwebtokens) | Token-based authentication with refresh |
+| **Backend** | Python 3 + Flask | REST API, business logic, authentication |
+| **ORM** | Flask-SQLAlchemy | Database modeling and query abstraction |
+| **Auth** | Flask-JWT-Extended + bcrypt | Token-based auth with secure password hashing |
+| **Database** | MySQL 8.0 | Persistent relational data storage |
+| **Web Frontend** | HTML + CSS + Vanilla JavaScript | Secretary and Doctor web dashboard |
+| **Mobile App** | Flutter (Dart) | Patient-facing mobile application |
+| **Cross-origin** | Flask-CORS | Enables the web dashboard to communicate with the backend |
 
-### 📦 Key Dependencies
+### 📦 Key Backend Dependencies
 
-**Backend:** Flask, Flask-SQLAlchemy, Flask-JWT-Extended, Flask-Migrate, PyMySQL, bcrypt, Flask-CORS
+```
+Flask
+Flask-SQLAlchemy
+Flask-JWT-Extended
+Flask-CORS
+Flask-Migrate
+PyMySQL
+bcrypt
+```
 
-**Mobile:** Dio (HTTP), Flutter Riverpod (state), Flutter Secure Storage, Google Fonts, Cached Network Image
+---
+
+## 👤 User Roles
+
+### 🧑 Patient — Mobile App (Flutter)
+- Log in with credentials created by the secretary
+- Request new appointments with available doctors
+- View upcoming and past appointments
+- View medical test results (abnormal values are visually flagged)
+- Submit home test measurements for doctor review
+- Use the restricted medical information chatbot
+- Receive notifications for appointment and result updates
+
+### 👩‍💼 Secretary — Web Dashboard
+- Create and delete patient and doctor accounts
+- Schedule, reschedule, and cancel appointments
+- View all appointments across all doctors
+- Send notifications to patients and doctors
+
+### 🩺 Doctor — Web Dashboard
+- View all assigned appointments and associated patient details
+- Confirm or reschedule appointment requests
+- Upload test results (auto-flagged if outside normal range)
+- View full medical history of assigned patients
+- Review home test measurements submitted by patients
+- View a summary of all flagged abnormal results
+- Send notifications to patients
 
 ---
 
 ## 📁 Project Structure
 
 ```
-📦 HayatiCare/
-├── 📂 backend/                  # Flask REST API
+📦 HMSS/
+├── 📂 backend/                     # Flask REST API
 │   ├── 📂 app/
-│   │   ├── 📂 models/          # SQLAlchemy ORM models
-│   │   ├── 📂 routes/          # API route blueprints
-│   │   ├── 📂 services/        # Business logic layer
-│   │   ├── 📂 utils/           # Helpers & response wrappers
-│   │   ├── __init__.py         # Flask app factory
-│   │   └── extensions.py       # SQLAlchemy & JWT init
-│   ├── 📂 migrations/          # Database schema files
-│   ├── config.py               # App configuration
-│   ├── run.py                  # Server entry point
-│   ├── seed_data.py            # Sample data seeder
-│   └── seed_admin.py           # Admin account seeder
+│   │   ├── 📂 models/              # SQLAlchemy ORM models
+│   │   ├── 📂 routes/              # API blueprints (auth, patients, doctors, appointments…)
+│   │   ├── 📂 services/            # Business logic layer
+│   │   └── 📂 utils/               # Helpers and response wrappers
+│   ├── config.py                   # App configuration
+│   ├── run.py                      # Server entry point
+│   ├── seed_admin.py               # Seeds the first secretary account
+│   └── requirements.txt            # Python dependencies
 │
-├── 📂 flutter_app/             # Flutter mobile app
+├── 📂 web/                         # Web dashboard (static files)
+│   ├── 📂 css/                     # Stylesheets
+│   ├── 📂 js/                      # Client-side JavaScript
+│   ├── 📂 secretary/               # Secretary pages
+│   ├── 📂 doctor/                  # Doctor pages
+│   └── index.html                  # Login page
+│
+├── 📂 flutter_app/                 # Flutter mobile app (patients)
 │   └── 📂 lib/
-│       ├── 📂 core/            # Theme, constants, colors
-│       ├── 📂 models/          # Dart data models
-│       ├── 📂 providers/       # Riverpod state providers
-│       ├── 📂 screens/         # UI screens (dashboard, appointments, etc.)
-│       ├── 📂 services/        # API service layer
-│       └── main.dart           # App entry point
+│       ├── 📂 core/                # Theme, constants, colors
+│       ├── 📂 models/              # Dart data models
+│       ├── 📂 providers/           # State management
+│       ├── 📂 screens/             # UI screens
+│       ├── 📂 services/            # API service layer
+│       └── main.dart               # App entry point
 │
-├── 📂 web/                     # Web dashboard (static)
-│   ├── 📂 css/                 # Stylesheets
-│   ├── 📂 js/                  # Client-side JavaScript
-│   ├── 📂 secretary/           # Secretary pages
-│   ├── 📂 doctor/              # Doctor pages
-│   └── index.html              # Login page
-│
-├── .env.example                # Environment template
-├── requirements.txt            # Python dependencies
-└── README.md                   # You are here
+└── README.md
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### 📋 Prerequisites
+### ✅ Prerequisites
 
-- ![Python](https://img.shields.io/badge/-Python_3.10+-3776AB?logo=python) installed
-- ![MySQL](https://img.shields.io/badge/-MySQL_8.0+-4479A1?logo=mysql) installed and running
-- ![Flutter](https://img.shields.io/badge/-Flutter_3.x-02569B?logo=flutter) SDK installed
-- ![Git](https://img.shields.io/badge/-Git-F05032?logo=git) (optional, for cloning)
+- Python 3.10+
+- MySQL 8.0+ running locally
+- Flutter SDK 3.x (for mobile development)
+- A modern web browser
 
 ---
 
-### 🖥️ Backend & Web Dashboard Setup
+### 🖥️ Backend Setup
 
 ```bash
-# 1. Navigate to the project root
-cd HayatiCare
+# 1. Navigate to the backend directory
+cd "C:\Coding Projects\hmss\backend"
 
-# 2. Create a Python virtual environment
+# 2. Create and activate a virtual environment
 python -m venv venv
+venv\Scripts\activate           # Windows
+# source venv/bin/activate      # macOS / Linux
 
-# 3. Activate it
-# Windows:
-venv\Scripts\activate
-# macOS / Linux:
-source venv/bin/activate
-
-# 4. Install Python dependencies
+# 3. Install dependencies
 pip install -r requirements.txt
-
-# 5. Configure environment
-cp .env.example .env
-# Edit .env with your MySQL credentials and secret keys
 ```
+
+---
 
 ### 🗄️ Database Setup
 
 ```sql
--- Log into MySQL and run:
+-- Run inside MySQL:
 CREATE DATABASE hmss_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'hmss_user'@'localhost' IDENTIFIED BY 'your_password_here';
-GRANT ALL PRIVILEGES ON hmss_db.* TO 'hmss_user'@'localhost';
-FLUSH PRIVILEGES;
 ```
 
+Then configure your database credentials in `config.py` or a `.env` file.
+
+---
+
+### ▶️ Running the Full System
+
+> ⚠️ **Two terminals are required.** Always start Terminal 1 first and keep both open.
+
+**Terminal 1 — Flask Backend**
+
 ```bash
-# Import the schema
-mysql -u hmss_user -p hmss_db < backend/migrations/schema.sql
-
-# Seed sample data (with venv activated)
-cd backend
-python seed_data.py
-```
-
-### ▶️ Run the Backend Server
-
-```bash
-cd backend
+cd "C:\Coding Projects\hmss\backend"
+venv\Scripts\activate
+python seed_admin.py        # First run only — seeds the secretary account
 python run.py
 ```
 
-The API and web dashboard will be available at **http://localhost:5000**.
+> API is available at **`http://localhost:5000`**
 
-**Default accounts (after seeding):**
+**Terminal 2 — Web Dashboard**
+
+```bash
+cd "C:\Coding Projects\hmss\web"
+python -m http.server 8080
+```
+
+> Dashboard is available at **`http://localhost:8080`**
+
+---
+
+### 🔑 Default Credentials
 
 | Role | Email | Password |
 |------|-------|----------|
 | 👩‍💼 Secretary | `secretary@hmss.com` | `Password123` |
 | 🩺 Doctor | `dr.smith@hmss.com` | `Password123` |
-| 🧑‍⚕️ Doctor | `dr.jones@hmss.com` | `Password123` |
-| 🧑 Patient | `patient1@hmss.com` | `Password123` |
 
 ---
 
-### 📱 Mobile App Setup
+### 📱 Flutter Mobile App Setup
 
 ```bash
 # 1. Navigate to the Flutter project
@@ -177,11 +226,9 @@ cd flutter_app
 # 2. Install Flutter dependencies
 flutter pub get
 
-# 3. Update the API base URL
-# Edit lib/core/constants.dart:
-#    Change apiBaseUrl to your machine's LAN IP
-#    For emulator: http://10.0.2.2:5000
-#    For physical device: http://YOUR_IP:5000
+# 3. Set the correct API base URL in lib/core/constants.dart
+#    Android Emulator:  http://10.0.2.2:5000
+#    Physical Device:   http://<YOUR_LAN_IP>:5000
 
 # 4. Run the app
 flutter run
@@ -189,56 +236,34 @@ flutter run
 
 ---
 
-## 🌐 API Overview
+## 🌐 API Reference
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/auth/login` | User login |
-| `POST` | `/api/auth/register` | Patient registration |
-| `GET` | `/api/doctors` | List all doctors |
-| `GET` | `/api/doctors/available` | List active doctors |
-| `GET` | `/api/patients/{id}/appointments` | Patient's appointments |
-| `POST` | `/api/appointments` | Create appointment |
-| `DELETE` | `/api/appointments/{id}` | Cancel appointment |
-| `GET` | `/api/notifications` | User notifications |
-| `GET` | `/api/secretaries/dashboard-summary` | Secretary dashboard data |
-
-### Default URLs
-
-| Service | URL |
-|---------|-----|
-| Backend API | `http://localhost:5000` |
-| Web Dashboard | `http://localhost:5000` |
-| Mobile App (emulator) | `http://10.0.2.2:5000` |
+| Method | Endpoint | Role | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/auth/login` | All | User login — returns JWT token |
+| `POST` | `/api/auth/reset-password` | All | Secure password reset |
+| `GET` | `/api/doctors` | Secretary | List all doctors |
+| `POST` | `/api/patients` | Secretary | Create a patient account |
+| `DELETE` | `/api/patients/{id}` | Secretary | Delete a patient account |
+| `GET` | `/api/appointments` | All | List appointments (scoped by role) |
+| `POST` | `/api/appointments` | Secretary | Schedule a new appointment |
+| `PATCH` | `/api/appointments/{id}` | Doctor / Secretary | Confirm or reschedule |
+| `DELETE` | `/api/appointments/{id}` | Secretary | Cancel an appointment |
+| `GET` | `/api/test-results/{patient_id}` | Patient / Doctor | View test results |
+| `POST` | `/api/test-results` | Doctor | Upload a test result |
+| `GET` | `/api/notifications` | All | View notifications |
+| `POST` | `/api/chatbot` | Patient | Query the medical chatbot |
 
 ---
 
-## 📸 Screenshots
+## 🔐 Security
 
-> _Screenshots coming soon. Replace these placeholders with actual images._
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://via.placeholder.com/400x250?text=Web+Dashboard" alt="Web Dashboard" width="400"/><br/>
-      <em>Secretary Dashboard</em>
-    </td>
-    <td align="center">
-      <img src="https://via.placeholder.com/200x400?text=Mobile+App" alt="Mobile App" width="200"/><br/>
-      <em>Patient Mobile App</em>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://via.placeholder.com/400x250?text=Appointments" alt="Appointments" width="400"/><br/>
-      <em>Appointments Page</em>
-    </td>
-    <td align="center">
-      <img src="https://via.placeholder.com/400x250?text=Doctor+Management" alt="Doctors" width="400"/><br/>
-      <em>Doctor Management</em>
-    </td>
-  </tr>
-</table>
+- **JWT authentication** — stateless, token-based sessions for all roles
+- **bcrypt password hashing** — passwords are never stored in plaintext
+- **Role-based access control** — every endpoint is scoped to its permitted roles only
+- **Account lockout** — temporary lock after 3 consecutive failed login attempts
+- **Input validation** — all inputs are validated server-side before processing
+- **HTTPS-ready** — all client–server communication is designed for encrypted channels
 
 ---
 
@@ -246,20 +271,28 @@ flutter run
 
 | Issue | Solution |
 |-------|----------|
-| ❌ **Flask command not found** | Activate your virtual environment: `venv\Scripts\activate` |
-| 🔌 **Port 5000 already in use** | Change port in `backend/run.py`, or run: <br/>`netstat -ano \| findstr :5000` then kill the process |
-| 🔐 **Database access denied** | Verify `.env` credentials match your MySQL user |
-| 🐬 **MySQL not running** | Start MySQL service: `net start MySQL80` (Windows) or `sudo service mysql start` (Linux) |
-| 📦 **Flutter packages missing** | Run `flutter pub get` in the `flutter_app/` directory |
-| 📱 **App can't reach backend** | Update `lib/core/constants.dart` with your machine's LAN IP instead of `localhost` |
-| 🌐 **CORS errors in browser** | Ensure Flask-CORS is in `requirements.txt` and registered in `app/__init__.py` |
-| 🔑 **JWT token invalid** | Keep consistent `JWT_SECRET_KEY` in `.env` across server restarts |
+| ❌ `ModuleNotFoundError` | Activate venv: `venv\Scripts\activate`, then `pip install -r requirements.txt` |
+| 🔌 Port 5000 in use | Find it: `netstat -ano \| findstr :5000` → kill: `taskkill /PID <PID> /F` |
+| 🔌 Port 8080 in use | Use a different port: `python -m http.server 9090` |
+| 🔐 Database access denied | Verify MySQL credentials in `config.py` match your local MySQL setup |
+| 🐬 MySQL not starting | Run `net start MySQL80` (Windows) or `sudo service mysql start` (Linux) |
+| 🌐 CORS errors in browser | Ensure `Flask-CORS` is installed and registered in `app/__init__.py` |
+| 🔑 JWT token invalid | Make sure `JWT_SECRET_KEY` in config is consistent across server restarts |
+| 📱 Flutter can't reach backend | Replace `localhost` with your machine's LAN IP in `lib/core/constants.dart` |
+| 📦 Flutter packages missing | Run `flutter pub get` inside the `flutter_app/` directory |
 
 ---
 
+## 📖 Documentation
+
+| Document | Description |
+|----------|-------------|
+| `SRS Document` | Full Software Requirements Specification (IEEE Std 830-1998) |
+| `ER Diagram` | Database entity-relationship model (13 tables) |
+| `Progress Report` | Development milestones and Gantt chart |
+
+---
 
 <p align="center">
-  Made with ❤️ by the HayatiCare Team
-  <br/>
-  <sub>Hospital Management Software System — HMSS</sub>
+  Made with ❤️ by the HMSS Team &nbsp;|&nbsp; Lebanese American University &nbsp;|&nbsp; COE461 — Spring 2026
 </p>
