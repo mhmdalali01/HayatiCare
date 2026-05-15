@@ -33,9 +33,9 @@
 
 ## 👥 Team
 
-| Name           | 
+| Name           |
 |----------------|
-| Mohamad Al Ali |
+| Mohamad Al Ali | 
 | Mohammad Sinn  | 
 | Ahmad Ghaddar  | 
 | Omar Saadeh    | 
@@ -134,58 +134,56 @@ bcrypt
 
 ---
 
-### 🖥️ Backend Setup
+### 🖥️ Backend & Web Dashboard Setup
 
 ```bash
-# 1. Navigate to the backend directory
+# 1. Navigate to the project root
 cd HayatiCare
 
 # 2. Create a Python virtual environment
 python -m venv venv
 
 # 3. Activate it
+# Windows:
 venv\Scripts\activate
+# macOS / Linux:
+source venv/bin/activate
 
 # 4. Install Python dependencies
 pip install -r requirements.txt
-```
 
----
+# 5. Configure environment
+cp .env.example .env
+# Edit .env with your MySQL credentials and secret keys
+```
 
 ### 🗄️ Database Setup
 
 ```sql
--- Run inside MySQL:
+-- Log into MySQL and run:
 CREATE DATABASE hmss_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'hmss_user'@'localhost' IDENTIFIED BY 'your_password_here';
+GRANT ALL PRIVILEGES ON hmss_db.* TO 'hmss_user'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
-Then configure your database credentials in `config.py` or a `.env` file.
+```bash
+# Import the schema
+mysql -u hmss_user -p hmss_db < backend/migrations/schema.sql
 
----
+# Seed sample data (with venv activated)
+cd backend
+python seed_data.py
+```
 
-### ▶️ Running the Full System
-
-> ⚠️ **Two terminals are required.** Always start Terminal 1 first and keep both open.
-
-**Terminal 1 — Flask Backend**
+### ▶️ Run the Backend Server
 
 ```bash
-cd "C:\Coding Projects\hmss\backend"
-venv\Scripts\activate
-python seed_admin.py        # First run only — seeds the secretary account
+cd backend
 python run.py
 ```
 
-> API is available at **`http://localhost:5000`**
-
-**Terminal 2 — Web Dashboard**
-
-```bash
-cd "C:\Coding Projects\hmss\web"
-python -m http.server 8080
-```
-
-> Dashboard is available at **`http://localhost:8080`**
+The API and web dashboard will be available at **http://localhost:5000**.
 
 ---
 
@@ -195,10 +193,12 @@ python -m http.server 8080
 |------|-------|----------|
 | 👩‍💼 Secretary | `secretary@hmss.com` | `Password123` |
 | 🩺 Doctor | `dr.smith@hmss.com` | `Password123` |
+| 🧑‍⚕️ Doctor | `dr.jones@hmss.com` | `Password123` |
+| 🧑 Patient | `patient1@hmss.com` | `Password123` |
 
 ---
 
-### 📱 Flutter Mobile App Setup
+### 📱 Mobile App Setup
 
 ```bash
 # 1. Navigate to the Flutter project
@@ -207,9 +207,11 @@ cd flutter_app
 # 2. Install Flutter dependencies
 flutter pub get
 
-# 3. Set the correct API base URL in lib/core/constants.dart
-#    Android Emulator:  http://10.0.2.2:5000
-#    Physical Device:   http://<YOUR_LAN_IP>:5000
+# 3. Update the API base URL
+# Edit lib/core/constants.dart:
+#    Change apiBaseUrl to your machine's LAN IP
+#    For emulator: http://10.0.2.2:5000
+#    For physical device: http://YOUR_IP:5000
 
 # 4. Run the app
 flutter run
@@ -234,6 +236,14 @@ flutter run
 | `POST` | `/api/test-results` | Doctor | Upload a test result |
 | `GET` | `/api/notifications` | All | View notifications |
 | `POST` | `/api/chatbot` | Patient | Query the medical chatbot |
+
+### 🔗 Default URLs
+
+| Service | URL |
+|---------|-----|
+| Backend API | `http://localhost:5000` |
+| Web Dashboard | `http://localhost:5000` |
+| Mobile App (emulator) | `http://10.0.2.2:5000` |
 
 ---
 
