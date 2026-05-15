@@ -12,8 +12,7 @@
   <img src="https://img.shields.io/badge/bcrypt-Security-white?style=flat&logo=letsencrypt&logoColor=white&labelColor=003A70&color=00509E" alt="bcrypt"/>
   &nbsp;
   <img src="https://img.shields.io/badge/JWT-Auth-white?style=flat&logo=jsonwebtokens&logoColor=white&labelColor=000000&color=333333" alt="JWT"/>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Status-Active-white?style=flat&labelColor=27AE60&color=1E8449" alt="Status"/>
+  
 </p>
 
 <h1 align="center">🏥 Hospital Management Software System</h1>
@@ -34,12 +33,12 @@
 
 ## 👥 Team
 
-| Name | Role |
-|------|------|
-| Mohamad Al Ali | Backend / Full-Stack |
-| Mohammad Sinn | Backend / Full-Stack |
-| Ahmad Ghaddar | Backend / Full-Stack |
-| Omar Saadeh | Backend / Full-Stack |
+| Name           | 
+|----------------|
+| Mohamad Al Ali |
+| Mohammad Sinn  | 
+| Ahmad Ghaddar  | 
+| Omar Saadeh    | 
 
 > 📚 Lebanese American University — COE461 Software Engineering (Spring 2026)
 
