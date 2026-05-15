@@ -1,10 +1,19 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Flask-3.x-000000?logo=flask&logoColor=white" alt="Flask"/>
-  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL"/>
-  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter"/>
-  <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript"/>
-  <img src="https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white" alt="JWT"/>
-  <img src="https://img.shields.io/badge/Status-Active-2ecc71" alt="Status"/>
+  <img src="https://img.shields.io/badge/Flask-3.x-ffffff?style=flat&logo=flask&logoColor=white&labelColor=000000&color=555555" alt="Flask"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/MySQL-8.0-white?style=flat&logo=mysql&logoColor=white&labelColor=4479A1&color=005C84" alt="MySQL"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/Flutter-3.x-white?style=flat&logo=flutter&logoColor=white&labelColor=02569B&color=0175C2" alt="Flutter"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/JavaScript-ES6-black?style=flat&logo=javascript&logoColor=black&labelColor=F7DF1E&color=E6C700" alt="JavaScript"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/SQLAlchemy-ORM-white?style=flat&logo=sqlalchemy&logoColor=white&labelColor=D71F00&color=A80000" alt="SQLAlchemy"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/bcrypt-Security-white?style=flat&logo=letsencrypt&logoColor=white&labelColor=003A70&color=00509E" alt="bcrypt"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/JWT-Auth-white?style=flat&logo=jsonwebtokens&logoColor=white&labelColor=000000&color=333333" alt="JWT"/>
+  &nbsp;
+  <img src="https://img.shields.io/badge/Status-Active-white?style=flat&labelColor=27AE60&color=1E8449" alt="Status"/>
 </p>
 
 <h1 align="center">🏥 Hospital Management Software System</h1>
@@ -27,10 +36,10 @@
 
 | Name | Role |
 |------|------|
-| Mohamad Al Ali | 
-| Mohammad Sinn  | 
-| Ahmad Ghaddar  | 
-| Omar Saadeh    | 
+| Mohamad Al Ali | Backend / Full-Stack |
+| Mohammad Sinn | Backend / Full-Stack |
+| Ahmad Ghaddar | Backend / Full-Stack |
+| Omar Saadeh | Backend / Full-Stack |
 
 > 📚 Lebanese American University — COE461 Software Engineering (Spring 2026)
 
@@ -76,34 +85,6 @@ Flask-Migrate
 PyMySQL
 bcrypt
 ```
-
----
-
-## 👤 User Roles
-
-### 🧑 Patient — Mobile App (Flutter)
-- Log in with credentials created by the secretary
-- Request new appointments with available doctors
-- View upcoming and past appointments
-- View medical test results (abnormal values are visually flagged)
-- Submit home test measurements for doctor review
-- Use the restricted medical information chatbot
-- Receive notifications for appointment and result updates
-
-### 👩‍💼 Secretary — Web Dashboard
-- Create and delete patient and doctor accounts
-- Schedule, reschedule, and cancel appointments
-- View all appointments across all doctors
-- Send notifications to patients and doctors
-
-### 🩺 Doctor — Web Dashboard
-- View all assigned appointments and associated patient details
-- Confirm or reschedule appointment requests
-- Upload test results (auto-flagged if outside normal range)
-- View full medical history of assigned patients
-- Review home test measurements submitted by patients
-- View a summary of all flagged abnormal results
-- Send notifications to patients
 
 ---
 
@@ -158,14 +139,15 @@ bcrypt
 
 ```bash
 # 1. Navigate to the backend directory
-cd "C:\Coding Projects\hmss\backend"
+cd HayatiCare
 
-# 2. Create and activate a virtual environment
+# 2. Create a Python virtual environment
 python -m venv venv
-venv\Scripts\activate           # Windows
-# source venv/bin/activate      # macOS / Linux
 
-# 3. Install dependencies
+# 3. Activate it
+venv\Scripts\activate
+
+# 4. Install Python dependencies
 pip install -r requirements.txt
 ```
 
