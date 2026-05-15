@@ -6,3 +6,9 @@ pymysql
 bcrypt
 python-dotenv
 flask-cors
+openai
+langchain
+langchain-openai
+langchain-community
+langchain-chroma
+chromadb
